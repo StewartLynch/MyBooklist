@@ -13,14 +13,15 @@
 //----------------------------------------------
 // Copyright © 2026 CreaTECH Solutions (Stewart Lynch). All rights reserved.
 
-
+import SwiftData
 import SwiftUI
 
 @main
 struct MyBooklistApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            StartTab()
         }
+        .modelContainer(for: Book.self)
     }
 }

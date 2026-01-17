@@ -16,18 +16,22 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct StartTab: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        TabView {
+            Tab("Books", systemImage: "book") {
+                BooksListView()
+            }
+            Tab("Authors", systemImage: "person") {
+               AuthorsListView()
+            }
+            Tab("Genres", systemImage: "tag") {
+               GenresListView()
+            }
         }
-        .padding()
     }
 }
 
-#Preview {
-    ContentView()
+#Preview(traits: .mockData) {
+    StartTab()
 }
