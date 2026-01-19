@@ -21,6 +21,9 @@ struct MyBooklistApp: App {
     var body: some Scene {
         WindowGroup {
             StartTab()
+                .onAppear {
+                    print(URL.applicationSupportDirectory.path())
+                }
         }
         .modelContainer(for: Book.self)
     }

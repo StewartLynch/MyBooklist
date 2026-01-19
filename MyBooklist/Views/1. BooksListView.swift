@@ -100,23 +100,17 @@ struct BooksListView: View {
                         }
                         .onDelete(perform: deleteBooks)
                     } else {
-#if DEBUG && targetEnvironment(simulator)
-                        if !ProcessInfo.processInfo.isRunningForPreviews {
-                            ContentUnavailableView {
-                                Image(systemName: "book.badge.plus")
-                            } description: {
-                                Text("There are no books")
-                            } actions: {
-                                Button("Seed Data") {
-                                    MockContent.seedDatabase(modelContext: modelContext)
-                                }
-                                .buttonStyle(.borderedProminent)
+                        ContentUnavailableView {
+                            Image(systemName: "book.badge.plus")
+                        } description: {
+                            Text("There are no books")
+                        } actions: {
+                            Button("Seed Data") {
+                                MockContent.seedDatabase(modelContext: modelContext)
                             }
+                            .buttonStyle(.borderedProminent)
                         }
-#else
-                        ContentUnavailableView("No Books", systemImage: "book.badge.plus")
-#endif
-                    }   
+                    }
                 }
             }
             .navigationTitle("Books")
