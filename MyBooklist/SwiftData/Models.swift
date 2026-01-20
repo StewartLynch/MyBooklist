@@ -59,3 +59,22 @@ final class Genre {
         self.colorHex = colorHex
     }
 }
+
+extension Book {
+    var id: String {
+        "\(title) \(author?.fullName ?? "")".lowercased().replacingOccurrences(of: " ", with: "_")
+    }
+}
+
+extension Author {
+    var id: String {
+        fullName.lowercased().replacingOccurrences(of: " ", with: "_")
+    }
+}
+
+
+extension Genre {
+    var id: String {
+        name.lowercased().replacingOccurrences(of: " ", with: "_")
+    }
+}
