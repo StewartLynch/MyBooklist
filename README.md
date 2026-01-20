@@ -1,6 +1,6 @@
 # Sharing Data with Other Users of the Same App
 
-![AppIcon128](Images/AppIcon128.png) This is the **completed Source code** for **Part 1**  and the **Starter Project** for **Part 2** on the video series for sharing data between users of the same app.
+![AppIcon128](Images/AppIcon128.png) This is the **completed Source code** for **Part 2**   on the video series for sharing data between users of the same app.
 
 Release Date: March 15 2026
 
