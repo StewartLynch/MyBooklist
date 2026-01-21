@@ -18,6 +18,10 @@ import SwiftUI
 
 struct BooksListView: View {
     @Environment(\.modelContext) private var modelContext
+    let manager = ShareManager.shared
+    @State private var askTitle = false
+    @State private var shareTitle = ""
+    @State private var showShareSheet = false
     @Query private var books: [Book]
     @Query private var authors: [Author]
     @Query private var genres: [Genre]
@@ -115,7 +119,7 @@ struct BooksListView: View {
             }
             .navigationTitle("Books")
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItemGroup(placement: .topBarTrailing) {
                     Menu {
                         Menu("Filter by Author") {
                             Button("All Authors") {
@@ -141,6 +145,35 @@ struct BooksListView: View {
                     } label: {
                         Image(systemName: "ellipsis.circle")
                     }
+                    Button {
+                        shareTitle = ""
+                        askTitle = true
+                    } label: {
+                        Image(systemName: "square.and.arrow.up")
+                    }
+                    .alert(
+                        "Enter a name",
+                        isPresented: $askTitle) {
+                            TextField("Name", text: $shareTitle)
+                            Button("Proceed") {
+                                if !shareTitle.isEmpty{
+                                    manager.prepareShare(from: filteredBooks, with: shareTitle)
+                                    if manager.sharedFileURL != nil {
+                                        showShareSheet = true
+                                    }
+                                }
+                            }
+                            Button(role: .cancel) {
+                                
+                            }
+                        } message: {
+                            Text("Give a name for your book selections.")
+                        }
+                        .sheet(isPresented: $showShareSheet) {
+                            if let url = manager.sharedFileURL {
+                                ShareSheet(activityItems: [url])
+                            }
+                        }
                 }
             }
         }

@@ -18,13 +18,27 @@ import SwiftUI
 
 @main
 struct MyBooklistApp: App {
+    let container: ModelContainer
+    
+    init() {
+        do {
+            container = try ModelContainer(for: Book.self)
+        } catch {
+            fatalError("Failed to create modelContainer: \(error)")
+        }
+    }
     var body: some Scene {
         WindowGroup {
             StartTab()
                 .onAppear {
                     print(URL.applicationSupportDirectory.path())
                 }
+                .onOpenURL { url in
+                    if url.pathExtension == "bkls" {
+                        ShareManager.shared.handleIncomingBKLSFile(url: url, modelContext: container.mainContext)
+                    }
+                }
         }
-        .modelContainer(for: Book.self)
+        .modelContainer(container)
     }
 }

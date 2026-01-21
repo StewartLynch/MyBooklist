@@ -15,6 +15,7 @@
 
 
 import Foundation
+import SwiftData
 
 @Observable
 class ShareManager {
@@ -86,6 +87,79 @@ class ShareManager {
             sharedFileURL = fileURL
         } catch {
             print("Failed to encode or write share file", error)
+        }
+    }
+    
+    func handleIncomingBKLSFile(url: URL, modelContext: ModelContext) {
+        let didAccess = url.startAccessingSecurityScopedResource()
+        defer {
+            if didAccess {
+                url.stopAccessingSecurityScopedResource()
+            }
+        }
+        do {
+            let data = try Data(contentsOf: url)
+            let decoder = JSONDecoder()
+            let shareJSON = try decoder.decode(SharedJSON.self, from: data)
+            importNew(shareJSON: shareJSON, modelContext: modelContext)
+        } catch {
+            print("Failed to import bkls file: \(error)")
+        }
+    }
+    
+    func importNew(shareJSON: SharedJSON, modelContext: ModelContext) {
+        var bookLookup: [String : Book] = [ : ]
+        var authorLookup: [String : Author] = [ : ]
+        var genreLookup: [String : Genre] = [ : ]
+        
+        var shareBookLookup: [String : SharedJSON.ShareBook] = [ : ]
+        var shareAuthorLookup: [String : SharedJSON.ShareAuthor] = [ : ]
+        var shareGenreLookup: [String : SharedJSON.ShareGenre] = [ : ]
+        
+        do {
+            shareJSON.books.forEach { shareBookLookup[$0.id] = $0}
+            shareJSON.authors.forEach { shareAuthorLookup[$0.id] = $0}
+            shareJSON.genres.forEach { shareGenreLookup[$0.id] = $0}
+            
+            let books = try modelContext.fetch(FetchDescriptor<Book>())
+            let authors = try modelContext.fetch(FetchDescriptor<Author>())
+            let genres = try modelContext.fetch(FetchDescriptor<Genre>())
+            
+            books.forEach { bookLookup[$0.id] = $0 }
+            authors.forEach { authorLookup[$0.id] = $0 }
+            genres.forEach { genreLookup[$0.id] = $0 }
+            
+            try shareJSON.books.forEach { shareBook in
+                if bookLookup[shareBook.id] == nil {
+                    let book = Book(title: shareBook.title)
+                    modelContext.insert(book)
+                    if let authorId = shareBook.authorId {
+                        if let author = authorLookup[authorId] {
+                            book.author = author
+                        } else {
+                            if let shareAuthor = shareAuthorLookup[authorId] {
+                                let author = Author(firstName: shareAuthor.firstName, lastName: shareAuthor.lastName)
+                                book.author = author
+                                authorLookup[shareAuthor.id] = author
+                            }
+                        }
+                    }
+                    shareBook.genreIds.forEach { genreId in
+                        if let genre = genreLookup[genreId] {
+                            book.genres.append(genre)
+                        } else {
+                            if let shareGenre = shareGenreLookup[genreId] {
+                                let genre = Genre(name: shareGenre.name, colorHex: shareGenre.colorHex)
+                                book.genres.append(genre)
+                                genreLookup[shareGenre.id] = genre
+                            }
+                        }
+                    }
+                }
+                try modelContext.save()
+            }
+        } catch {
+            print(error.localizedDescription)
         }
     }
 }
