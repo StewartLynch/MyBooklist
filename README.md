@@ -2,7 +2,7 @@
 
 ![AppIcon128](Images/AppIcon128.png) This is the **completed Source code** for **Part 2**   on the video series for sharing data between users of the same app.
 
-Release Date: March 15 2026
+Release Date: Feb 22, 2026
 
 If you want to support my work, you can - </br>
 
