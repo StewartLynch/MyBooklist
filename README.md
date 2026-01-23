@@ -2,7 +2,7 @@
 
 ![AppIcon128](Images/AppIcon128.png) This is the **starter branch** for the video on sharing data between users of the same app.
 
-Release Date: March 8, 2026
+Release Date: Feb 15, 2026
 
 If you want to support my work, you can - </br>
 
