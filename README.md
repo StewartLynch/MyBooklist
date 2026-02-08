@@ -2,7 +2,9 @@
 
 ![AppIcon128](Images/AppIcon128.png) This is the **starter branch** for the video on sharing data between users of the same app.
 
-Release Date: Feb 15, 2026
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=TPGn2pJjfis
+" target="_blank"><img src="http://img.youtube.com/vi/TPGn2pJjfis/0.jpg" 
+alt="Sharing Data {art 1" width="480" height="360" border="1" /></a>
 
 If you want to support my work, you can - </br>
 
